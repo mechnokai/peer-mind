@@ -1,50 +1,82 @@
 ---
 name: capture
-description: "Persist durable self-knowledge to peer-mind memory. Load this skill when the user reveals something about themselves that will still be true in six months: a hard-won lesson, a decision with reasoning, a recurring behavioral pattern, a stable fact about their identity or relationships. Do not load for transient status, session notes, or task-specific context."
+description: "Persist durable knowledge to peer-mind memory. Load this skill when (a) the user reveals something about themselves that will still be true in six months, or (b) you discover something about how to work with this user that would change your default behavior next session: an approach that failed, a workflow that worked better than expected, a correction the user issued twice. Do not load for transient status, session notes, or task-specific context."
 ---
 
 # capture
 
-Persists durable self-knowledge to the peer-mind memory directory and syncs to git. Silent, immediate, no confirmations.
+Persists two kinds of durable knowledge to the peer-mind memory directory:
+
+1. **User knowledge** — things the user learned, decided, or revealed about themselves
+2. **Agent lessons** — things you (the LLM) learned about how to work with this user
+
+Both matter. The first keeps the user from re-explaining themselves. The second keeps you from repeating failed approaches.
 
 ## When this applies
 
-The user just told you something about themselves that is durable. Not what they are doing, but what they learned, decided, or keep doing. Not a status update. Not a task. Something that, if you forget it, they will have to explain again next session.
+### User knowledge
 
-Signals:
+The user just told you something durable about themselves. Signals:
 
-- They are reflecting on something that already happened and drawing a conclusion from it
-- They have made a decision and are explaining why
-- They are describing their own behavior as if observing it from outside ("I keep", "I always", "every time")
-- They are correcting your model of them ("no, I'm actually...", "that's not how I work")
-- They are naming a person who matters and giving you context you did not have
+- Reflecting on the past and drawing a conclusion
+- Explaining a decision with reasoning
+- Observing their own behavior from outside ("I keep", "I always", "every time")
+- Correcting your model of them ("no, I'm actually...", "that's not how I work")
+- Naming a person who matters with context you did not have
 
-If you are unsure whether it is durable, ask yourself: will this still matter in six months? If yes, capture it. If no, it belongs in `current-context.md` or nowhere.
+### Agent lessons
+
+You just discovered something about how to work with this user that would change your default behavior. Signals:
+
+- You tried an approach and it failed or got pushback
+- The user corrected the same behavior twice in one session
+- You found a better workflow through trial and error
+- The user explicitly told you to do something differently next time
+- You wasted effort on something that should have been obvious
+
+Ask yourself: would knowing this at the start of the session have changed what I did? If yes, capture it.
 
 ## Routing
 
-Pick the file by what kind of durable thing it is:
-
 | What it is | File |
 |---|---|
-| A lesson drawn from experience | `lessons.md` |
-| A decision, with reasoning | `decisions.md` |
-| A behavioral pattern they noticed or you both named | `patterns.md` |
-| A stable fact about who they are | `identity.md` |
-| A relationship state change, or a person who matters | `relationships.md` |
-| A project status, blocker, or next step that is unlikely to change this week | `projects.md` |
+| User lesson from experience | `lessons.md` |
+| Agent lesson about workflow | `agent-lessons.md` |
+| User decision with reasoning | `decisions.md` |
+| User behavioral pattern | `patterns.md` |
+| Stable fact about the user | `identity.md` |
+| Relationship state change | `relationships.md` |
+| Project status unlikely to change this week | `projects.md` |
 | Time-bound current situation | `current-context.md` |
 
-If two apply, pick the one more useful in six months. If none apply cleanly, `lessons.md` with a plain one-liner. Never ask the user to disambiguate.
+If two apply, pick the one more useful in six months. If none apply cleanly, default to `lessons.md`. Never ask the user to disambiguate.
+
+## Agent lesson format
+
+`agent-lessons.md` uses this structure:
+
+```markdown
+## <topic>
+
+- **YYYY-MM-DD** — <trigger>: <what happened>
+  - Wrong approach: <what you did>
+  - Better approach: <what to do instead>
+  - Why: <reason>
+```
+
+Group by topic (for example: `git-workflow`, `communication-style`, `code-review`). Create a new topic section if none exists. Append; do not rewrite existing entries.
+
+If the same lesson appears twice across sessions (you made the same mistake again), flag it to the user: "I've made this mistake before. Promoting this to a standing rule."
 
 ## Steps
 
-Run all steps without pausing. Do not narrate what you are doing.
+Run all steps without pausing. Do not narrate.
 
 1. Memory directory: default `~/peer-mind/`. Honor user-configured overrides.
 2. If git repo: `cd <memory-dir> && git fetch && git pull`. On conflict, `git merge --abort`, tell the user, stop.
 3. Append to the routed file using its existing format:
    - `lessons.md`: `- YYYY-MM-DD — <lesson>`
+   - `agent-lessons.md`: topic-grouped block as shown above
    - `decisions.md`: `### <Title>` block with Date / Decision / Reasoning / Status
    - `patterns.md`: under the most relevant section
    - others: match existing section structure
@@ -54,7 +86,7 @@ Run all steps without pausing. Do not narrate what you are doing.
 ## Hard rules
 
 - No confirmations before writing
-- No editorializing, write their words
+- No editorializing, write their words (or for agent lessons, write what actually happened)
 - No duplicate captures of the same fact in one session
 - No session notes here (those go in `sessions/YYYY-MM-DD.md`)
 - No commits if the pull failed

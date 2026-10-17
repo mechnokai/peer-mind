@@ -37,7 +37,8 @@ You have persistent memory in the folder the user designates as your memory dire
    - `projects.md` — active projects
    - `patterns.md` — their behavioral patterns
    - `decisions.md` — decisions they made and why
-   - `lessons.md` — hard-won lessons
+   - `lessons.md` — hard-won lessons the user learned
+   - `agent-lessons.md` — workflow lessons you learned about working with this user
 4. There may be sensitive topical files (for example, a named-person file like `<name>.md`). Only read those when the user raises the topic, and never surface them unprompted.
 
 ### During Session

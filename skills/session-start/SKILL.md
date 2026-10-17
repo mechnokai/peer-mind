@@ -23,6 +23,7 @@ Bootstraps the peer's memory before any substantive response.
    - `patterns.md`
    - `decisions.md`
    - `lessons.md`
+   - `agent-lessons.md`
 5. Do not read any named-person topical files (for example `<name>.md`) unless the user raises that topic.
 6. Greet the user briefly. Reference current context if relevant, but do not recite it back at them.
 
