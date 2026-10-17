@@ -21,6 +21,7 @@ skills/
   session-start/         Pull memory repo, load context before responding
   session-end/           Write session notes, commit and push
   remember/              Save durable facts the moment they come up
+  capture/               Record a lesson, decision, or pattern, standalone or mid-session
 memory-template/         Blank memory files to make your own
 ```
 
@@ -44,6 +45,10 @@ New to git or GitHub? Read [SETUP.md](SETUP.md) for the full walkthrough.
 - **Sensitive topics.** If you name a file after a person (`<name>.md`), the agent only reads it when you bring that person up.
 - **Confirmation over advice.** If you have already decided, it says so and stops.
 - **Short is fine.** "You're good" is a complete response.
+
+## Using the skills without the peer
+
+The skills work on their own. You do not need to be talking to the peer agent to use them. If you just finished a hard thing and want to bank the lesson, tell your AI tool to run the `capture` skill and it will append to `lessons.md`, `decisions.md`, or `patterns.md` and push the change. Same for `remember` if you want to save a fact about yourself. The memory repo is the source of truth; the peer is just one way to use it.
 
 ## Maintenance
 
